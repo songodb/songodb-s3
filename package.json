@@ -1,0 +1,28 @@
+{
+  "name": "@songodb/songodb-s3",
+  "version": "1.2.0",
+  "description": "A thin JSON object storage API around the AWS S3 Javascript SDK",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/songodb/songodb-s3.git"
+  },
+  "author": "Daniel Jhin Yoo <danieljyoo@gmail.com> (https://github.com/danieljyoo)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/songodb/songodb-s3/issues"
+  },
+  "homepage": "https://github.com/songodb/songodb-s3#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "aws-sdk": "^2.606.0",
+    "dotenv": "^8.2.0",
+    "jest": "^24.9.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
