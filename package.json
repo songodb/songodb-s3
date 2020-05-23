@@ -1,6 +1,6 @@
 {
   "name": "@songodb/songodb-s3",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A thin JSON object storage API around the AWS S3 Javascript SDK",
   "main": "index.js",
   "scripts": {
