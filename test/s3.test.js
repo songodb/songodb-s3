@@ -31,8 +31,44 @@ describe('getJSON', () => {
     await deleteJSON(s3, BUCKET, key)
   })
   it ('should get an object from S3', async () => {
-    let { Body } = await getJSON(s3, BUCKET, key)
-    expect(Body).toEqual(obj)
+    let result = await getJSON(s3, BUCKET, key)
+    expect(result).toEqual({
+      "AcceptRanges": "bytes",
+      "Body": obj,
+      "ContentLength": 17,
+      "ContentType": "application/json",
+      "ETag": expect.anything(),
+      "LastModified": expect.anything(),
+      "Metadata": {}
+    })
+  })
+  it ('should return null if key does not exist', async () => {
+    let result = await getJSON(s3, BUCKET, 'badkey.json')
+    expect(result).toBe(null)
+  })
+})
+
+describe('deleteJSON', () => {
+  let key = 'deleteJSON.json'
+  beforeEach(async () => {
+    await putJSON(s3, BUCKET, key, { })
+  })
+  afterAll(async () => {
+    await deleteJSON(s3, BUCKET, key)
+  })
+  it ('should delete an object to S3', async () => {
+    let result = await deleteJSON(s3, BUCKET, key)
+    expect(result).toEqual({
+      "Deleted": [ { "Key": "deleteJSON.json" } ],
+      "Errors": []
+    })
+  })
+  it ('should not throw if key does not exist', async () => {
+    let result = await deleteJSON(s3, BUCKET, 'badkey.json')
+    expect(result).toEqual({
+      "Deleted": [ { "Key": "badkey.json" } ],
+      "Errors": []
+    })
   })
 })
 
@@ -63,7 +99,6 @@ describe('listJSON', () => {
       MaxKeys: 2,
       NextContinuationToken: expect.anything()
     })
-    console.log(JSON.stringify(result, null, 2))
     let token = result.NextContinuationToken
     result = await listJSON(s3, BUCKET, 'list/folder/', { MaxKeys: 2, ContinuationToken: token })
     expect(result).toMatchObject({
@@ -86,6 +121,18 @@ describe('listJSON', () => {
       MaxKeys: 100,
       CommonPrefixes: [ { Prefix: 'list/folder/' }, { Prefix: 'list/folder2/' } ],
       KeyCount: 2
+    })
+  })
+  it ('should return empty content if prefix does not exist', async() => {
+    let result = await listJSON(s3, BUCKET, 'doesnotexist/')
+    expect(result).toEqual({
+      "IsTruncated": false,
+      "Contents": [],
+      "Name": "songodb-s3.songo.io",
+      "Prefix": "doesnotexist/",
+      "MaxKeys": 100,
+      "CommonPrefixes": [],
+      "KeyCount": 0
     })
   })
 })
